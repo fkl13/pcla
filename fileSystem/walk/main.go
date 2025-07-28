@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type config struct {
@@ -15,6 +16,8 @@ type config struct {
 	ext string
 	// min file size
 	size int64
+	// daysAgo to filter out files
+	daysAgo *time.Time
 	// list files
 	list bool
 	// delete files
@@ -33,6 +36,8 @@ func main() {
 	del := flag.Bool("del", false, "Delete files")
 	ext := flag.String("ext", "", "File extension to filter out")
 	size := flag.Int64("size", 0, "Minimum file size")
+	days := flag.Int64("days", 0, "Show modified files within n days")
+
 	flag.Parse()
 
 	var (
@@ -49,8 +54,18 @@ func main() {
 		defer f.Close()
 	}
 
+	now := time.Now()
+	var nDaysAgo *time.Time
+	if *days > 0 {
+		temp := now.AddDate(0, 0, -int(*days))
+		nDaysAgo = &temp
+	} else {
+		nDaysAgo = nil
+	}
+
 	c := config{
 		ext:     *ext,
+		daysAgo: nDaysAgo,
 		size:    *size,
 		list:    *list,
 		del:     *del,
@@ -71,7 +86,7 @@ func run(root string, out io.Writer, cfg config) error {
 			return err
 		}
 
-		if filterOut(path, cfg.ext, cfg.size, info) {
+		if filterOut(path, cfg.ext, cfg.size, cfg.daysAgo, info) {
 			return nil
 		}
 

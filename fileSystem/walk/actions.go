@@ -7,14 +7,19 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 )
 
-func filterOut(path, ext string, minSize int64, info os.FileInfo) bool {
+func filterOut(path, ext string, minSize int64, then *time.Time, info os.FileInfo) bool {
 	if info.IsDir() || info.Size() < minSize {
 		return true
 	}
 
 	if ext != "" && filepath.Ext(path) != ext {
+		return true
+	}
+
+	if then != nil && info.ModTime().After(*then) {
 		return true
 	}
 
