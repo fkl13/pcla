@@ -12,6 +12,7 @@ import (
 
 	"github.com/fkl13/pcla/cobra/pScan/scan"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // listCmd represents the list command
@@ -20,12 +21,8 @@ var listCmd = &cobra.Command{
 	Aliases: []string{"l"},
 	Short:   "List hosts in hosts list",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		hostFile, err := cmd.Flags().GetString("hosts-file")
-		if err != nil {
-			return err
-		}
-
-		return listAction(os.Stdout, hostFile, args)
+		hostsFile := viper.GetString("hosts-file")
+		return listAction(os.Stdout, hostsFile, args)
 	},
 }
 
