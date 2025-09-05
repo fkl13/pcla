@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/fkl13/cla/interacting/todo"
+	"github.com/fkl13/pcla/interacting/todo"
 )
 
 func TestAdd(t *testing.T) {
