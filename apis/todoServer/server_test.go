@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -53,6 +54,11 @@ func setupAPI(t *testing.T) (string, func()) {
 	}
 }
 
+func TestMain(m *testing.M) {
+	log.SetOutput(io.Discard)
+	os.Exit(m.Run())
+}
+
 func TestGet(t *testing.T) {
 	testCases := []struct {
 		name       string
@@ -79,7 +85,7 @@ func TestGet(t *testing.T) {
 			path:       "/todo/1",
 			expCode:    http.StatusOK,
 			expItems:   1,
-			expContent: "Task number 1",
+			expContent: "Task number 1.",
 		},
 		{
 			name:    "NotFound",
@@ -253,6 +259,35 @@ func TestComplete(t *testing.T) {
 
 		if r.StatusCode != http.StatusNoContent {
 			t.Fatalf("Expected %q, got %q.", http.StatusText(http.StatusNoContent), http.StatusText(r.StatusCode))
+		}
+	})
+
+	t.Run("CheckComplete", func(t *testing.T) {
+		r, err := http.Get(url + "/todo")
+		if err != nil {
+			t.Error(err)
+		}
+
+		if r.StatusCode != http.StatusOK {
+			t.Fatalf("Expected %q, got %q.", http.StatusText(http.StatusOK), http.StatusText(r.StatusCode))
+		}
+
+		var resp todoResponse
+		if err := json.NewDecoder(r.Body).Decode(&resp); err != nil {
+			t.Fatal(err)
+		}
+		r.Body.Close()
+
+		if len(resp.Results) != 2 {
+			t.Errorf("Expected 2 items, got %d.", len(resp.Results))
+		}
+
+		if !resp.Results[0].Done {
+			t.Error("Expected Item 1 to be completed")
+		}
+
+		if resp.Results[1].Done {
+			t.Error("Expected Item 2 not to be completed")
 		}
 	})
 }
