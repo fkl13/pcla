@@ -1,5 +1,7 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Fabian Klaiber
+Copyrights apply to this source code.
+Check LICENSE for details.
 */
 package cmd
 

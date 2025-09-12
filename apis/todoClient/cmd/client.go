@@ -13,11 +13,11 @@ import (
 const timeFormat = "Jan/02 @15:04"
 
 var (
-	ErrConnection      = errors.New("Connection error")
-	ErrNotFound        = errors.New("Not found")
-	ErrInvalidResponse = errors.New("Invalid server response")
-	ErrInvalid         = errors.New("Invalid data")
-	ErrNotNumber       = errors.New("Not a number")
+	ErrConnection      = errors.New("connection error")
+	ErrNotFound        = errors.New("not found")
+	ErrInvalidResponse = errors.New("invalid server response")
+	ErrInvalid         = errors.New("invalid data")
+	ErrNotNumber       = errors.New("not a number")
 )
 
 type item struct {
@@ -109,6 +109,16 @@ func addItem(apiRoot, task string) error {
 	}
 
 	return sendRequest(url, http.MethodPost, "application/json", http.StatusCreated, &body)
+}
+
+func completeItem(apiRoot string, id int) error {
+	urlPath := fmt.Sprintf("%s/todo/%d?complete", apiRoot, id)
+	return sendRequest(urlPath, http.MethodPatch, "", http.StatusNoContent, nil)
+}
+
+func deleteItem(apiRoot string, id int) error {
+	urlPath := fmt.Sprintf("%s/todo/%d", apiRoot, id)
+	return sendRequest(urlPath, http.MethodDelete, "", http.StatusNoContent, nil)
 }
 
 func sendRequest(url, method, contentType string, expStatus int, body io.Reader) error {
