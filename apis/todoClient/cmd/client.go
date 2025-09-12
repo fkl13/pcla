@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -91,6 +92,23 @@ func getOne(apiRoot string, id int) (item, error) {
 	}
 
 	return items[0], nil
+}
+
+func addItem(apiRoot, task string) error {
+	url := fmt.Sprintf("%s/todo", apiRoot)
+
+	item := struct {
+		Task string `json:"task"`
+	}{
+		Task: task,
+	}
+
+	var body bytes.Buffer
+	if err := json.NewEncoder(&body).Encode(item); err != nil {
+		return err
+	}
+
+	return sendRequest(url, http.MethodPost, "application/json", http.StatusCreated, &body)
 }
 
 func sendRequest(url, method, contentType string, expStatus int, body io.Reader) error {
