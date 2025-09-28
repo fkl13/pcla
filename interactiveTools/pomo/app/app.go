@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"image"
+	"time"
 
 	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
 	"github.com/mum4k/termdash"
@@ -76,4 +77,31 @@ func (a *App) resize() error {
 	}
 
 	return a.controller.Redraw()
+}
+
+func (a *App) Run() error {
+	defer a.term.Close()
+	defer a.controller.Close()
+
+	ticker := time.NewTicker(2 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-a.redrawCh:
+			if err := a.controller.Redraw(); err != nil {
+				return err
+			}
+		case err := <-a.errorCh:
+			if err != nil {
+				return err
+			}
+		case <-a.ctx.Done():
+			return nil
+		case <-ticker.C:
+			if err := a.resize(); err != nil {
+				return nil
+			}
+		}
+	}
 }
