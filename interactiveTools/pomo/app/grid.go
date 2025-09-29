@@ -10,6 +10,8 @@ import (
 
 func newGrid(b *buttonSet, w *widgets, t terminalapi.Terminal) (*container.Container, error) {
 	builder := grid.New()
+
+	// Add first row
 	builder.Add(
 		grid.RowHeightPerc(30,
 			grid.ColWidthPercWithOpts(30,
@@ -18,9 +20,8 @@ func newGrid(b *buttonSet, w *widgets, t terminalapi.Terminal) (*container.Conta
 					container.BorderTitle("Press Q to Quit"),
 				},
 				// Add inside row
-				grid.RowHeightPerc(80,
-					grid.Widget(w.donTimer)),
-				grid.RowHeightFixedWithOpts(20,
+				grid.RowHeightPerc(80, grid.Widget(w.donTimer)),
+				grid.RowHeightPercWithOpts(20,
 					[]container.Option{
 						container.AlignHorizontal(align.HorizontalCenter),
 					},

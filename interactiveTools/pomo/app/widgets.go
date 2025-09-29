@@ -54,7 +54,7 @@ func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 		return nil, err
 	}
 
-	w.disType, err = newSegmentDisplay(ctx, w.updateTxtTimer, errorCh)
+	w.disType, err = newSegmentDisplay(ctx, w.updateTxtType, errorCh)
 	if err != nil {
 		return nil, err
 	}
@@ -72,12 +72,13 @@ func newWidgets(ctx context.Context, errorCh chan<- error) (*widgets, error) {
 	return w, nil
 }
 
-func newText(ctx context.Context, updateText chan string, errorCh chan<- error) (*text.Text, error) {
+func newText(ctx context.Context, updateText <-chan string, errorCh chan<- error) (*text.Text, error) {
 	txt, err := text.New()
 	if err != nil {
 		return nil, err
 	}
 
+	// Goroutine to update Text
 	go func() {
 		for {
 			select {
@@ -93,7 +94,7 @@ func newText(ctx context.Context, updateText chan string, errorCh chan<- error) 
 	return txt, nil
 }
 
-func newDonut(ctx context.Context, updateDonut chan []int, errorCh chan<- error) (*donut.Donut, error) {
+func newDonut(ctx context.Context, donUpdater <-chan []int, errorCh chan<- error) (*donut.Donut, error) {
 	don, err := donut.New(
 		donut.Clockwise(),
 		donut.CellOpts(cell.FgColor(cell.ColorBlue)),
@@ -105,7 +106,7 @@ func newDonut(ctx context.Context, updateDonut chan []int, errorCh chan<- error)
 	go func() {
 		for {
 			select {
-			case d := <-updateDonut:
+			case d := <-donUpdater:
 				if d[0] <= d[1] {
 					errorCh <- don.Absolute(d[0], d[1])
 				}
@@ -118,12 +119,13 @@ func newDonut(ctx context.Context, updateDonut chan []int, errorCh chan<- error)
 	return don, nil
 }
 
-func newSegmentDisplay(ctx context.Context, updateText chan string, errorCh chan<- error) (*segmentdisplay.SegmentDisplay, error) {
+func newSegmentDisplay(ctx context.Context, updateText <-chan string, errorCh chan<- error) (*segmentdisplay.SegmentDisplay, error) {
 	sd, err := segmentdisplay.New()
 	if err != nil {
 		return nil, err
 	}
 
+	// Goroutine to update SegmentDisplay
 	go func() {
 		for {
 			select {
@@ -131,9 +133,8 @@ func newSegmentDisplay(ctx context.Context, updateText chan string, errorCh chan
 				if t == "" {
 					t = " "
 				}
-				errorCh <- sd.Write([]*segmentdisplay.TextChunk{
-					segmentdisplay.NewChunk(t),
-				})
+
+				errorCh <- sd.Write([]*segmentdisplay.TextChunk{segmentdisplay.NewChunk(t)})
 			case <-ctx.Done():
 				return
 			}

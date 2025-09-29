@@ -100,7 +100,7 @@ func (a *App) Run() error {
 			return nil
 		case <-ticker.C:
 			if err := a.resize(); err != nil {
-				return nil
+				return err
 			}
 		}
 	}
