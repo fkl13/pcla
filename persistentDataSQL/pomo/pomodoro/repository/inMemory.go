@@ -1,10 +1,13 @@
+//go:build inmemory
+// +build inmemory
+
 package repository
 
 import (
 	"fmt"
 	"sync"
 
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro"
 )
 
 type inMemoryRepo struct {

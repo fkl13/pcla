@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/fkl13/pcla/interactiveTools/pomo/app"
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/app"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro"
 	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"

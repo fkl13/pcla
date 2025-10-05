@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro"
 	"github.com/mum4k/termdash/cell"
 	"github.com/mum4k/termdash/widgets/button"
 )

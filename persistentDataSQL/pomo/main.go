@@ -5,7 +5,7 @@ Check LICENSE for details.
 */
 package main
 
-import "github.com/fkl13/pcla/interactiveTools/pomo/cmd"
+import "github.com/fkl13/pcla/persistentDataSQL/pomo/cmd"
 
 func main() {
 	cmd.Execute()

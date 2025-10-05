@@ -5,7 +5,8 @@ import (
 	"image"
 	"time"
 
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro"
+
 	"github.com/mum4k/termdash"
 	"github.com/mum4k/termdash/terminal/tcell"
 	"github.com/mum4k/termdash/terminal/terminalapi"

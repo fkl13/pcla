@@ -1,8 +1,11 @@
+//go:build inmemory
+// +build inmemory
+
 package cmd
 
 import (
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro"
-	"github.com/fkl13/pcla/interactiveTools/pomo/pomodoro/repository"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro"
+	"github.com/fkl13/pcla/persistentDataSQL/pomo/pomodoro/repository"
 )
 
 func getRepo() (pomodoro.Repository, error) {
