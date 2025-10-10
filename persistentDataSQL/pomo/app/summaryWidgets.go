@@ -104,5 +104,53 @@ func newBarChart(ctx context.Context, config *pomodoro.IntervalConfig,
 func newLineChart(ctx context.Context, config *pomodoro.IntervalConfig,
 	update chan bool, errorCh chan<- error,
 ) (*linechart.LineChart, error) {
-	panic("unimplemented")
+	lc, err := linechart.New(
+		linechart.AxesCellOpts(cell.FgColor(cell.ColorRed)),
+		linechart.YLabelCellOpts(cell.FgColor(cell.ColorBlue)),
+		linechart.XLabelCellOpts(cell.FgColor(cell.ColorCyan)),
+		linechart.YAxisFormattedValues(
+			linechart.ValueFormatterSingleUnitDuration(time.Second, 0),
+		),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	updateWidget := func() error {
+		ws, err := pomodoro.RangeSummary(time.Now(), 7, config)
+		if err != nil {
+			return err
+		}
+
+		err = lc.Series(ws[0].Name, ws[0].Values,
+			linechart.SeriesCellOpts(cell.FgColor(cell.ColorBlue)),
+			linechart.SeriesXLabels(ws[0].Labels),
+		)
+		if err != nil {
+			return err
+		}
+
+		return lc.Series(ws[1].Name, ws[1].Values,
+			linechart.SeriesCellOpts(cell.FgColor(cell.ColorYellow)),
+			linechart.SeriesXLabels(ws[1].Labels),
+		)
+	}
+
+	go func() {
+		for {
+			select {
+			case <-update:
+				errorCh <- updateWidget()
+			case <-ctx.Done():
+				return
+			}
+		}
+	}()
+
+	// Force update line chart at start
+	if err := updateWidget(); err != nil {
+		return nil, err
+	}
+
+	return lc, nil
 }

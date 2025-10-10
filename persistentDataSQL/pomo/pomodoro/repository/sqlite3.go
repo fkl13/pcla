@@ -158,7 +158,7 @@ func (r *dbRepo) Breaks(n int) ([]pomodoro.Interval, error) {
 
 func (r *dbRepo) CategorySummary(day time.Time, filter string) (time.Duration, error) {
 	r.RLock()
-	defer r.Unlock()
+	defer r.RUnlock()
 
 	stmt := `SELECT sum(actual_duration) FROM interval
 	WHERE category LIKE ? AND
