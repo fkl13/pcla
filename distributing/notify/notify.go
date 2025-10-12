@@ -8,7 +8,7 @@ import (
 const (
 	SeverityLow = iota
 	SeverityNormal
-	SevervityUrgent
+	SeverityUrgent
 )
 
 type Severity int
@@ -35,7 +35,7 @@ func (s Severity) String() string {
 		sev = "low"
 	case SeverityNormal:
 		sev = "normal"
-	case SevervityUrgent:
+	case SeverityUrgent:
 		sev = "critical"
 	}
 
@@ -49,7 +49,7 @@ func (s Severity) String() string {
 			sev = "Info"
 		case SeverityNormal:
 			sev = "Normal"
-		case SevervityUrgent:
+		case SeverityUrgent:
 			sev = "Error"
 		}
 	}
