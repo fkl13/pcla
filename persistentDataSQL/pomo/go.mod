@@ -22,6 +22,7 @@ require (
 )
 
 require (
+	github.com/fkl13/pcla/distributing/notify v0.0.0-20251015201102-358316029dea
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/gdamore/tcell/v2 v2.0.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
