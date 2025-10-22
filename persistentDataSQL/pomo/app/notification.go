@@ -1,3 +1,6 @@
+//go:build !containers && !disable_notification
+// +build !containers,!disable_notification
+
 package app
 
 import "github.com/fkl13/pcla/distributing/notify"
